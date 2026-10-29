@@ -1,6 +1,6 @@
 [package]
 name = "lookmd"
-version = "1.0.1"
+version = "1.0.2"
 description = "Local WYSIWYG Markdown editor"
 authors = ["LookMD"]
 repository = "https://github.com/promise-zb/look-md.git"
