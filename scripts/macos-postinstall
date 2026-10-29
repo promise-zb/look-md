@@ -1,0 +1,52 @@
+#!/bin/bash
+# pkg 把新版本写入 /Applications/showMD.app 之后执行。
+# 若用户以前把 showMD.app 放在别的可写目录，这里原地换掉，默认打开 .md 仍指向原位置。
+INSTALLED="/Applications/showMD.app"
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+
+if [ ! -d "$INSTALLED" ]; then
+  exit 0
+fi
+
+CONSOLE_USER="$(stat -f '%Su' /dev/console 2>/dev/null || true)"
+if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
+  sudo -u "$CONSOLE_USER" osascript -e 'tell application "showMD" to quit' >/dev/null 2>&1 || true
+fi
+sleep 1
+
+replace_one() {
+  dest="$1"
+  [ -n "$dest" ] || return 0
+  [ "$dest" = "$INSTALLED" ] && return 0
+  case "$dest" in
+    */showMD.app) ;;
+    *) return 0 ;;
+  esac
+  parent="$(dirname "$dest")"
+  [ -w "$parent" ] || return 0
+  rm -rf "$dest"
+  ditto "$INSTALLED" "$dest"
+  "$LSREGISTER" -f "$dest" >/dev/null 2>&1 || true
+}
+
+if [ -n "$CONSOLE_USER" ] && [ "$CONSOLE_USER" != "root" ]; then
+  while IFS= read -r path; do
+    replace_one "$path"
+  done < <(sudo -u "$CONSOLE_USER" /usr/bin/mdfind "kMDItemCFBundleIdentifier == 'local.showmd.editor'" 2>/dev/null || true)
+
+  console_home="$(dscl . -read "/Users/$CONSOLE_USER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')"
+  if [ -n "$console_home" ]; then
+    for candidate in \
+      "$console_home/Applications/showMD.app" \
+      "$console_home/Desktop/showMD.app" \
+      "$console_home/Downloads/showMD.app"
+    do
+      if [ -d "$candidate" ]; then
+        replace_one "$candidate"
+      fi
+    done
+  fi
+fi
+
+"$LSREGISTER" -f "$INSTALLED" >/dev/null 2>&1 || true
+exit 0

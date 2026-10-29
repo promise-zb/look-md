@@ -22,12 +22,16 @@ function fail(msg) {
   process.exit(1)
 }
 
+function run(cmd, args) {
+  const result = spawnSync(cmd, args, { cwd: root, stdio: 'inherit' })
+  if (result.status !== 0) process.exit(result.status === null ? 1 : result.status)
+}
+
 function pack(bundles) {
-  const result = spawnSync(pnpm, ['exec', 'tauri', 'build', '--bundles', bundles], {
-    cwd: root,
-    stdio: 'inherit',
-  })
-  process.exit(result.status === null ? 1 : result.status)
+  run(pnpm, ['exec', 'tauri', 'build', '--bundles', bundles])
+  // Mac 再打一个 .pkg。双击它会升级已安装的 showMD，而不是另装一份。
+  if (os === 'darwin' && bundles === 'dmg') run('bash', ['scripts/macos-pkg.sh'])
+  process.exit(0)
 }
 
 if (mode === 'mac') {
