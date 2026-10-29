@@ -1,0 +1,62 @@
+# 推送 tag（如 v0.1.0）后，分别为 macOS 和 Windows 打安装包。
+# dmg 只能在 Mac 上编，nsis 只能在 Windows 上编，所以用矩阵拆开，不能交叉编译。
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            rust_targets: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin --bundles dmg
+          - platform: macos-latest
+            rust_targets: x86_64-apple-darwin
+            args: --target x86_64-apple-darwin --bundles dmg
+          - platform: windows-latest
+            rust_targets: ''
+            args: --bundles nsis
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
+
+      - name: Install frontend
+        run: pnpm install --frozen-lockfile
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: showMD ${{ github.ref_name }}
+          releaseBody: |
+            - **Mac（Apple Silicon）**：`showMD_*_aarch64.dmg`
+            - **Mac（Intel）**：`showMD_*_x64.dmg`
+            - **Windows**：`showMD_*_x64-setup.exe`（NSIS）
+            Mac 未公证时：下载后按住 Control 点图标 → 打开。
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
