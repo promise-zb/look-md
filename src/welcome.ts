@@ -7,7 +7,7 @@ const keyOpenFolder = isMac ? '⇧⌘O' : 'Ctrl+Shift+O'
 const keySave = isMac ? '⌘S' : 'Ctrl+S'
 const keySaveAs = isMac ? '⇧⌘S' : 'Ctrl+Shift+S'
 
-export const WELCOME_MARKDOWN = `# showMD
+export const WELCOME_MARKDOWN = `# LookMD
 
 本地 Markdown 编辑器：所见即所得，文件只存在你的磁盘上，**不联网**。
 

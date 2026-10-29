@@ -1,6 +1,6 @@
 #!/bin/bash
-# 用刚编好的 showMD.app 打一个可双击的 pkg。
-# 包 id 固定为 local.showmd.editor.pkg。版本升高后再双击，会覆盖已安装的 showMD，笔记不动。
+# 用刚编好的 LookMD.app 打一个可双击的 pkg。
+# 包 id 固定为 local.lookmd.editor.pkg。版本升高后再双击，会覆盖已安装的 LookMD，笔记不动。
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,8 +26,8 @@ newest() {
   done | sort -nr | head -1 | cut -d' ' -f2-
 }
 
-app="$(newest 'showMD.app' d || true)"
-dmg="$(newest "showMD_${version}_*.dmg" f || true)"
+app="$(newest 'LookMD.app' d || true)"
+dmg="$(newest "LookMD_${version}_*.dmg" f || true)"
 
 work="$(mktemp -d)"
 mountpoint=""
@@ -42,17 +42,17 @@ trap cleanup EXIT
 # 打 dmg 时 Tauri 会清掉旁边的 .app，这时从 dmg 里取出再打包。
 if [ -z "$app" ]; then
   if [ -z "$dmg" ] || [ ! -f "$dmg" ]; then
-    echo "找不到 showMD.app 或 showMD_${version} 的 dmg。" >&2
+    echo "找不到 LookMD.app 或 LookMD_${version} 的 dmg。" >&2
     exit 1
   fi
   mountpoint="$(mktemp -d)"
   hdiutil attach "$dmg" -nobrowse -readonly -mountpoint "$mountpoint" >/dev/null
-  if [ ! -d "$mountpoint/showMD.app" ]; then
-    echo "dmg 里没有 showMD.app：$dmg" >&2
+  if [ ! -d "$mountpoint/LookMD.app" ]; then
+    echo "dmg 里没有 LookMD.app：$dmg" >&2
     exit 1
   fi
-  ditto "$mountpoint/showMD.app" "$work/showMD.app"
-  app="$work/showMD.app"
+  ditto "$mountpoint/LookMD.app" "$work/LookMD.app"
+  app="$work/LookMD.app"
 fi
 
 case "${dmg:-}$app" in
@@ -73,7 +73,7 @@ else
   out_dir="$(cd "$(dirname "$app")/.." && pwd)/dmg"
 fi
 mkdir -p "$out_dir"
-pkg="$out_dir/showMD_${version}_${arch}.pkg"
+pkg="$out_dir/LookMD_${version}_${arch}.pkg"
 
 scripts="$(mktemp -d)"
 cp "$root/scripts/macos-postinstall" "$scripts/postinstall"
@@ -82,11 +82,11 @@ chmod +x "$scripts/postinstall"
 pkgbuild \
   --component "$app" \
   --install-location /Applications \
-  --identifier local.showmd.editor.pkg \
+  --identifier local.lookmd.editor.pkg \
   --version "$version" \
   --scripts "$scripts" \
   "$pkg"
 rm -rf "$scripts"
 
 echo "更新安装包：$pkg"
-echo "双击该 pkg：装到「应用程序」，并覆盖本机已有的 showMD.app。笔记文件不会动。"
+echo "双击该 pkg：装到「应用程序」，并覆盖本机已有的 LookMD.app。笔记文件不会动。"

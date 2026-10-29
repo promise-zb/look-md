@@ -24,7 +24,7 @@
 | 导出 | HTML / PDF（macOS 可走打印面板）；Word 另说 |
 | 主题 | CSS 换肤，离线 |
 | 侧栏文件树 | 打开一个文件夹当工作区 |
-| `.md` 关联 | 双击用 showMD 打开 |
+| `.md` 关联 | 双击用 LookMD 打开 |
 
 ## 0.3 不是同一类产品（别一上来做）
 
@@ -35,7 +35,7 @@
 | iA Writer / Bear | 原生体验好，语法高亮为主，不是 Typora 那种「打完就变成文档」 |
 | 纯预览器 | Quick Look / MacMD Viewer：只读 |
 
-showMD 的定位建议：**本地 WYSIWYG Markdown 编辑器**，文件就是文件夹里的 `.md`。不做同步、不做账号、不做插件商店。
+LookMD 的定位建议：**本地 WYSIWYG Markdown 编辑器**，文件就是文件夹里的 `.md`。不做同步、不做账号、不做插件商店。
 
 ## 0.4 Typora 自己用什么（避免选错参照）
 

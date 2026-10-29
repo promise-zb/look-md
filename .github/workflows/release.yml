@@ -51,11 +51,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: showMD ${{ github.ref_name }}
+          releaseName: LookMD ${{ github.ref_name }}
           releaseBody: |
-            - **Mac（Apple Silicon）**：`showMD_*_aarch64.dmg`
-            - **Mac（Intel）**：`showMD_*_x64.dmg`
-            - **Windows**：`showMD_*_x64-setup.exe`（NSIS）
+            - **Mac（Apple Silicon）**：`LookMD_*_aarch64.dmg`
+            - **Mac（Intel）**：`LookMD_*_x64.dmg`
+            - **Windows**：`LookMD_*_x64-setup.exe`（NSIS）
             Mac 未公证时：下载后按住 Control 点图标 → 打开。
           releaseDraft: true
           prerelease: false

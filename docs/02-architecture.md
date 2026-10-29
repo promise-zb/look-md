@@ -5,7 +5,7 @@
 已实现（仓库根）：
 
 ```text
-showMD.app
+LookMD.app
 ├─ 原生进程（Tauri 2 / Rust）
 │    打开/保存、菜单、窗口标题
 │    只读写用户选中的路径，不访问网络
@@ -54,4 +54,4 @@ macOS 即使用户以为是本地应用，也要在 `Info.plist` 声明：
 
 ## 2.6 和前端工程的关系
 
-编辑器页面用 **React 19 + Vite**。这是一个独立小前端，产物是静态文件，给 WebView 加载。不要把 showMD 塞进别的 monorepo 微前端路由里。
+编辑器页面用 **React 19 + Vite**。这是一个独立小前端，产物是静态文件，给 WebView 加载。不要把 LookMD 塞进别的 monorepo 微前端路由里。

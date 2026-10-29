@@ -29,7 +29,7 @@ function run(cmd, args) {
 
 function pack(bundles) {
   run(pnpm, ['exec', 'tauri', 'build', '--bundles', bundles])
-  // Mac 再打一个 .pkg。双击它会升级已安装的 showMD，而不是另装一份。
+  // Mac 再打一个 .pkg。双击它会升级已安装的 LookMD，而不是另装一份。
   if (os === 'darwin' && bundles === 'dmg') run('bash', ['scripts/macos-pkg.sh'])
   process.exit(0)
 }

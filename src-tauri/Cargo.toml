@@ -1,13 +1,13 @@
 [package]
-name = "showmd"
+name = "lookmd"
 version = "1.0.0"
 description = "Local WYSIWYG Markdown editor"
-authors = ["showMD"]
+authors = ["LookMD"]
 repository = "https://github.com/promise-zb/look-md.git"
 edition = "2021"
 
 [lib]
-name = "showmd_lib"
+name = "lookmd_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

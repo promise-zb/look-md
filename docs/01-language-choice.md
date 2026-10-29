@@ -1,6 +1,6 @@
 # 1. 语言怎么选
 
-约束：**可安装的 Mac 应用、安装后只在本地跑、不联网。** 下面按「适不适合 showMD」排，不是按语言热度。
+约束：**可安装的 Mac 应用、安装后只在本地跑、不联网。** 下面按「适不适合 LookMD」排，不是按语言热度。
 
 ## 1.1 一句话对照
 
@@ -18,14 +18,14 @@
 
 - 系统级：`NSDocument` 管打开/保存/未保存圆点、版本浏览；`NSOpenPanel`；打印 PDF。
 - 渲染：`WKWebView` 加载 **file:// 或自定义 URL scheme** 指向包内的编辑器页面（禁止默认联网）。
-- 和诊断类小工具的差别：那种是「本地 HTTP + 简单页」；showMD 要长期驻留的编辑器，应用 **WKWebView 直接加载包内 HTML**，不要再起 Python 服务器。
+- 和诊断类小工具的差别：那种是「本地 HTTP + 简单页」；LookMD 要长期驻留的编辑器，应用 **WKWebView 直接加载包内 HTML**，不要再起 Python 服务器。
 - 代价：Windows 以后要另做壳（或那时再加 Tauri）。公式/所见即所得仍然要写（或嵌入）前端，Swift 本身不提供 Milkdown。
 
 适合：目标就是 macOS，要菜单栏、拖文件到 Dock、`.md` 关联都「像系统软件」。
 
 ## 1.3 Rust + Tauri 2（综合第二、跨平台第一）
 
-**showMD 已按这条实现**（仓库根：Tauri 2 + React 19 + Milkdown Crepe 7）。
+**LookMD 已按这条实现**（仓库根：Tauri 2 + React 19 + Milkdown Crepe 7）。
 
 Tauri **2**（2024 起正式线）：壳是 Rust，UI 是你熟悉的 Vite + TS/React，窗口是 **系统 WebView**（Mac 上还是 WebKit，不内嵌 Chrome）。
 
@@ -55,7 +55,7 @@ Python 能做 **Mac .app + 本地 UI**，适合诊断工具：页面简单、用
 
 ## 1.6 Electron / 纯前端
 
-Typora 早期、VS Code、Obsidian 证明这条能做完产品。离线也没问题（资源打进 asar）。代价是 **每个用户开一个 Chromium**。showMD 若追求「装上像 Typora 现在这样轻」，不要选 Electron 当终局。
+Typora 早期、VS Code、Obsidian 证明这条能做完产品。离线也没问题（资源打进 asar）。代价是 **每个用户开一个 Chromium**。LookMD 若追求「装上像 Typora 现在这样轻」，不要选 Electron 当终局。
 
 可用它做 **两周的交互原型**，验证 WYSIWYG 手感，再把同一套前端搬进 Tauri 或 WKWebView。
 

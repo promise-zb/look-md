@@ -42,7 +42,7 @@ export default function App() {
 
   const syncTitle = useCallback(async (nextPath: string | null, nextDirty: boolean) => {
     const mark = nextDirty ? ' ●' : ''
-    await getCurrentWindow().setTitle(`${fileName(nextPath)}${mark} — showMD`)
+    await getCurrentWindow().setTitle(`${fileName(nextPath)}${mark} — LookMD`)
   }, [])
 
   const markDirty = useCallback(

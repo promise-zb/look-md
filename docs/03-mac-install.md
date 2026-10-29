@@ -2,7 +2,7 @@
 
 本仓库已按 **Rust + Tauri 2 + React/Vite** 落地，代码在仓库根。运行：`./install.sh && pnpm tauri dev`。
 
-目标：用户拿到 **showMD.app**（或带它的 `.dmg`），拖到「应用程序」，双击即用，**不依赖**系统是否装了 Node / Python / Rust。
+目标：用户拿到 **LookMD.app**（或带它的 `.dmg`），拖到「应用程序」，双击即用，**不依赖**系统是否装了 Node / Python / Rust。
 
 ## 3.1 分发形态
 
@@ -11,7 +11,7 @@
 | `.app` 文件夹 | macOS 应用的本质；可直接拷到 `/Applications` |
 | `.dmg` | 常见分发：打开窗口让用户拖到 Applications |
 | Homebrew Cask | 以后有稳定下载 URL 再做 |
-| Mac App Store | 要沙箱、公证、苹果抽成；任意打开用户文件夹不友好。showMD 这种「打开任意 md」更适合 **官网 dmg + 公证**，与 Typora 现行渠道类似 |
+| Mac App Store | 要沙箱、公证、苹果抽成；任意打开用户文件夹不友好。LookMD 这种「打开任意 md」更适合 **官网 dmg + 公证**，与 Typora 现行渠道类似 |
 
 若用 **Swift**：Xcode 出 Archive。若用 **Tauri**：`pnpm tauri build` 在 `src-tauri/target/release/bundle/macos/` 出 `.app`。
 
@@ -23,7 +23,7 @@
 2. 签名 `Developer ID Application`
 3. `notarytool` 公证 + `stapler`
 
-自己电脑 `xattr -cr showMD.app` 只能骗自己，不能当发布流程。
+自己电脑 `xattr -cr LookMD.app` 只能骗自己，不能当发布流程。
 
 架构：打 **Universal**（`arm64 + x86_64`），或只出 Apple Silicon（2026 年一般够用）。本机若是 Intel，默认产物文件名带 `x64`；别人用 M 系列芯片时，应用会走 Rosetta，或你再打一份 `aarch64-apple-darwin` / universal。
 
@@ -32,8 +32,8 @@
 **支持。** 别人不必装 Node / Rust。流程：
 
 1. 仓库设为 **Public**（或 Release 对有权限的人可见）。私有仓库外人下不到安装包。
-2. `pnpm tauri build` 得到 `showMD_0.1.0_*.dmg`（约数 MB～十几 MB）。
-3. GitHub → **Releases** → 新建 tag（如 `showmd-v0.1.0`）→ 把 **dmg 当附件** 上传。说明里写：打开 dmg，把 showMD 拖到 Applications。
+2. `pnpm tauri build` 得到 `LookMD_0.1.0_*.dmg`（约数 MB～十几 MB）。
+3. GitHub → **Releases** → 新建 tag（如 `v1.0.0`）→ 把 **dmg 当附件** 上传。说明里写：打开 dmg，把 LookMD 拖到 Applications。
 
 不要把 `node_modules`、`src-tauri/target` 推进 Git（已在 `.gitignore`）。源码可以一起公开，方便别人改；安装包靠 Release 附件，不要指望 clone 下来就能双击。
 
@@ -53,7 +53,7 @@
 
 ## 3.4 文件关联
 
-`Info.plist` 注册 `public.plain-text` 的 `.md` / `.markdown`。用户在「访达 → 显示简介 → 打开方式」里选 showMD。Tauri 有 bundle 文件类型配置。
+`Info.plist` 注册 `public.plain-text` 的 `.md` / `.markdown`。用户在「访达 → 显示简介 → 打开方式」里选 LookMD。Tauri 有 bundle 文件类型配置。
 
 ## 3.5 建议的实现顺序（避免一上来铺太大）
 

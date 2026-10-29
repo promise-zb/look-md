@@ -172,7 +172,7 @@ fn edit_menu(app: &tauri::AppHandle) -> tauri::Result<Submenu<tauri::Wry>> {
 fn macos_app_menu(app: &tauri::AppHandle) -> tauri::Result<Submenu<tauri::Wry>> {
     Submenu::with_items(
         app,
-        "showMD",
+        "LookMD",
         true,
         &[
             &PredefinedMenuItem::about(app, None, None)?,
@@ -199,7 +199,7 @@ fn markdown_file(path: &std::path::Path) -> Option<String> {
     }
 }
 
-/// Windows 双击文件、或命令行 `showMD note.md`：路径在 argv 里。
+/// Windows 双击文件、或命令行 `LookMD note.md`：路径在 argv 里。
 fn launch_file_from_args() -> Option<String> {
     std::env::args_os().skip(1).find_map(|arg| {
         let text = arg.to_string_lossy();
@@ -271,7 +271,7 @@ pub fn run() {
             }
         })
         .build(tauri::generate_context!())
-        .expect("error while running showMD");
+        .expect("error while running LookMD");
 
     app.run(|app_handle, event| {
         // Mac：访达双击、拖到程序图标，系统发 Opened，不走 argv。

@@ -1,4 +1,4 @@
-# showMD
+# LookMD
 
 本地、断网可用的 **所见即所得 Markdown 编辑器**。仓库目录是 `look-md`，Mac 上装成 `.app`。实现：**Rust + Tauri 2** + **React 19 / Vite / TypeScript** + **Milkdown Crepe**。
 
