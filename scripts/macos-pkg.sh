@@ -15,7 +15,6 @@ fi
 newest() {
   local name_glob="$1"
   local type_flag="$2"
-  local found=""
   local root_dir path
   for root_dir in "${search_roots[@]}"; do
     [ -d "$root_dir" ] || continue

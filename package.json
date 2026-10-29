@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "desktop": "tauri dev",
+    "icons": "swift scripts/make-icon.swift icon-src.png && tauri icon icon-src.png -o src-tauri/icons && rm -rf src-tauri/icons/ios src-tauri/icons/android src-tauri/icons/Square*.png src-tauri/icons/StoreLogo.png src-tauri/icons/64x64.png src-tauri/icons/icon.png",
     "pack": "node scripts/pack.mjs",
     "pack:mac": "node scripts/pack.mjs mac",
     "pack:win": "node scripts/pack.mjs win"

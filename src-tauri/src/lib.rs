@@ -29,7 +29,6 @@ struct DirEntryDto {
     name: String,
     path: String,
     is_dir: bool,
-    is_markdown: bool,
 }
 
 #[tauri::command]
@@ -49,14 +48,12 @@ fn list_dir(path: String) -> Result<Vec<DirEntryDto>, String> {
 
         let full = entry.path();
         let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
-        let is_markdown = is_markdown_path(&full.to_string_lossy());
         // 只留文件夹和笔记，避免侧栏被图片、锁文件刷满。
-        if is_dir || is_markdown {
+        if is_dir || is_markdown_path(&full.to_string_lossy()) {
             entries.push(DirEntryDto {
                 name,
                 path: full.to_string_lossy().into_owned(),
                 is_dir,
-                is_markdown,
             });
         }
     }
@@ -245,7 +242,6 @@ fn build_menu(app: &tauri::AppHandle) -> tauri::Result<Menu<tauri::Wry>> {
     }
 }
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())

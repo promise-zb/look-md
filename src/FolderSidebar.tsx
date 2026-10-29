@@ -6,7 +6,6 @@ export type DirEntry = {
   name: string
   path: string
   isDir: boolean
-  isMarkdown: boolean
 }
 
 /** Windows 路径不区分大小写；Mac 保持原样，避免大小写敏感磁盘上两个文件被当成同一个。 */
