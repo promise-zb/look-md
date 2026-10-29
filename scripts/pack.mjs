@@ -7,6 +7,7 @@
  *   pnpm pack:win    仅 Windows（需要 VS C++ 生成工具）
  */
 import { spawnSync } from 'node:child_process'
+import { existsSync, mkdirSync, readdirSync, readFileSync, copyFileSync, statSync } from 'node:fs'
 import { platform } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -27,10 +28,56 @@ function run(cmd, args) {
   if (result.status !== 0) process.exit(result.status === null ? 1 : result.status)
 }
 
+/** 把本次安装包复制到仓库根的 releases/<版本>/。该目录已 gitignore，Tauri 也不会把它打进应用。 */
+function archiveRelease() {
+  const { version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+  const dest = join(root, 'releases', version)
+  mkdirSync(dest, { recursive: true })
+
+  const bases = [join(root, 'src-tauri', 'target')]
+  if (process.env.CARGO_TARGET_DIR) bases.push(process.env.CARGO_TARGET_DIR)
+
+  const bundleDirs = []
+  for (const base of bases) {
+    if (!existsSync(base)) continue
+    const direct = join(base, 'release', 'bundle')
+    if (existsSync(direct)) bundleDirs.push(direct)
+    for (const name of readdirSync(base)) {
+      const nested = join(base, name, 'release', 'bundle')
+      if (existsSync(nested)) bundleDirs.push(nested)
+    }
+  }
+
+  const copied = []
+  const walk = (dir) => {
+    for (const name of readdirSync(dir)) {
+      const full = join(dir, name)
+      if (statSync(full).isDirectory()) {
+        walk(full)
+        continue
+      }
+      if (!name.includes(version)) continue
+      if (!/\.(dmg|pkg|exe|msi)$/i.test(name)) continue
+      const target = join(dest, name)
+      copyFileSync(full, target)
+      copied.push(target)
+    }
+  }
+  for (const dir of bundleDirs) walk(dir)
+
+  if (copied.length === 0) {
+    console.error(`没有找到版本 ${version} 的安装包，未写入 ${dest}`)
+    process.exit(1)
+  }
+  console.log(`本地安装包（不提交）：`)
+  for (const file of copied) console.log(`  ${file}`)
+}
+
 function pack(bundles) {
   run(pnpm, ['exec', 'tauri', 'build', '--bundles', bundles])
   // Mac 再打一个 .pkg。双击它会升级已安装的 LookMD，而不是另装一份。
   if (os === 'darwin' && bundles === 'dmg') run('bash', ['scripts/macos-pkg.sh'])
+  archiveRelease()
   process.exit(0)
 }
 

@@ -7,6 +7,9 @@ pnpm-debug.log*
 node_modules
 dist
 dist-ssr
+
+# 各版本安装包只留在本机，供上传 GitHub Release。不提交，也不打进应用包。
+/releases/
 *.local
 icon-src.png
 

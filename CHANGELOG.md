@@ -1,5 +1,10 @@
 # 更新日志
 
+## 1.0.1 — 2026-10-29
+
+- 安装后的程序名改为 **LookMD**（窗口标题、菜单、`.app` 和安装包文件名）。
+- 程序标识改为 `local.lookmd.editor`。已经装过 showMD 的不会被这次覆盖，装好 LookMD 后可删掉旧的 showMD。
+
 ## 1.0.0 — 2026-10-29
 
 项目名 **look-md**，仓库 [promise-zb/look-md](https://github.com/promise-zb/look-md.git)。安装后的程序名是 **LookMD**。
