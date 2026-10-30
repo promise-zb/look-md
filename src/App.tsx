@@ -5,6 +5,7 @@ import { open, save } from '@tauri-apps/plugin-dialog'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
 
+import { AppHeader, fileName } from './AppHeader'
 import { CrepeEditor } from './CrepeEditor'
 import type { CrepeEditorHandle } from './CrepeEditor'
 import { FolderSidebar, dirOfFile, samePath } from './FolderSidebar'
@@ -28,13 +29,6 @@ const SIDEBAR_MAX_RATIO = 0.3
 function clampSidebarWidth(width: number, total: number) {
   const max = Math.max(SIDEBAR_MIN, total * SIDEBAR_MAX_RATIO)
   return Math.min(max, Math.max(SIDEBAR_MIN, width))
-}
-
-/** 同时认 `/` 和 `\`，Mac、Windows 都能取出文件名。 */
-function fileName(path: string | null): string {
-  if (!path) return '未命名'
-  const parts = path.split(/[/\\]/)
-  return parts[parts.length - 1] || path
 }
 
 export default function App() {
@@ -282,34 +276,16 @@ export default function App() {
 
   return (
     <div className="shell">
-      <header className="chrome">
-        <span className="doc-name" title={path ?? ''}>
-          {fileName(path)}
-          {dirty ? ' ●' : ''}
-        </span>
-        <div className="actions">
-          <button type="button" onClick={doNew}>
-            新建
-          </button>
-          <button type="button" onClick={() => void doOpen()}>
-            打开
-          </button>
-          <button type="button" onClick={() => void doOpenFolder()}>
-            打开文件夹
-          </button>
-          <button
-            type="button"
-            disabled={!currentDir}
-            title={currentDir ? '重新读取当前目录' : '还没有打开文件夹'}
-            onClick={refreshDir}
-          >
-            刷新
-          </button>
-          <button type="button" onClick={() => void doSave()}>
-            保存
-          </button>
-        </div>
-      </header>
+      <AppHeader
+        path={path}
+        dirty={dirty}
+        currentDir={currentDir}
+        onNew={doNew}
+        onOpen={doOpen}
+        onOpenFolder={doOpenFolder}
+        onRefresh={refreshDir}
+        onSave={doSave}
+      />
       <div className={resizing ? 'workspace is-resizing' : 'workspace'} ref={workspaceRef}>
         <div className="sidebar-pane" style={{ width: sidebarWidth }}>
           {workspaceRoot && currentDir ? (
