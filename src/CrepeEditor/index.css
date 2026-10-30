@@ -1,3 +1,11 @@
+.editor-shell {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
 .editor-host {
   flex: 1;
   min-width: 0;
@@ -29,11 +37,132 @@
   height: auto;
 }
 
+/* 拖动条改的是高度。cover 会把图裁掉，看起来大小没变。按比例缩放到框里。 */
+.editor-host .milkdown-image-block > .image-wrapper img {
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+
+.editor-host .milkdown-image-block.selected > .image-wrapper::before {
+  pointer-events: none;
+}
+
+.editor-host .milkdown-image-block .image-wrapper .image-resize-handle {
+  z-index: 3;
+  height: 10px;
+  bottom: -6px;
+  cursor: row-resize;
+}
+
+.editor-host .milkdown-image-block.selected .image-wrapper .image-resize-handle {
+  opacity: 1;
+}
+
+.editor-host .milkdown-image-block .caption-input {
+  width: min(100%, 480px);
+  margin: 8px auto 0;
+  padding: 4px 10px;
+  border: 1px solid #d4d4d4;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.image-meta {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f4f4f5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.image-meta label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.image-meta label span {
+  flex: none;
+  width: 4.5em;
+}
+
+.image-meta input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 6px;
+  background: #fff;
+  padding: 6px 8px;
+  font: inherit;
+}
+
+.image-meta-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.image-meta button {
+  border: 0;
+  border-radius: 999px;
+  background: #e7e7e7;
+  line-height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.image-meta button[type='submit'] {
+  background: #dedede;
+}
+
+@media (prefers-color-scheme: dark) {
+  .editor-host .milkdown-image-block .caption-input,
+  .image-meta input {
+    background: #2a2a2a;
+    color: #ececec;
+    border-color: #444;
+  }
+
+  .image-meta {
+    background: #2c2c2c;
+    color: #ececec;
+  }
+
+  .image-meta button {
+    background: #3a3a3a;
+    color: #ececec;
+  }
+}
+
 /* 图片块的地址条按 content-box 写了 56px 高和 16px 内边距。
    全局 border-box 会把它压扁，预览图再按原尺寸盖住正文。 */
 .editor-host .milkdown .image-edit {
   box-sizing: content-box;
   overflow: hidden;
+}
+
+.editor-host .milkdown-image-block.image-meta-host {
+  min-height: 148px;
+}
+
+.editor-host .milkdown-image-block.image-meta-host > .image-edit {
+  display: none;
+}
+
+.editor-host .milkdown .image-edit .confirm {
+  line-height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
 }
 
 .editor-host .milkdown .image-edit .link-importer {
