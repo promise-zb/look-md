@@ -113,6 +113,12 @@ export function CrepeEditor({
         // 只改界面上的图片地址，写回磁盘的仍是 Markdown 里的原路径。
         [Crepe.Feature.ImageBlock]: {
           proxyDomURL: (url) => imageDomSrc(url, filePathRef.current),
+          blockConfirmButton: '确认',
+          blockUploadButton: '上传文件',
+          blockUploadPlaceholderText: '或粘贴链接',
+          blockCaptionPlaceholderText: '填写图片说明',
+          inlineUploadButton: '上传',
+          inlineUploadPlaceholderText: '或粘贴链接',
         },
         [Crepe.Feature.CodeMirror]: {
           extensions: [codeCompletion],

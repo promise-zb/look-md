@@ -29,6 +29,38 @@
   height: auto;
 }
 
+/* 图片块的地址条按 content-box 写了 56px 高和 16px 内边距。
+   全局 border-box 会把它压扁，预览图再按原尺寸盖住正文。 */
+.editor-host .milkdown .image-edit {
+  box-sizing: content-box;
+  overflow: hidden;
+}
+
+.editor-host .milkdown .image-edit .link-importer {
+  min-width: 0;
+}
+
+.editor-host .milkdown .image-edit .image-preview {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.editor-host .milkdown .image-edit .image-preview img {
+  width: 40px;
+  height: 40px;
+  max-width: none;
+  object-fit: cover;
+}
+
+.editor-host .milkdown .empty-image-inline .image-preview,
+.editor-host .milkdown .empty-image-inline .image-preview img {
+  width: 24px;
+  height: 24px;
+}
+
 /* 默认输入框只有 200px，长链接只能看到末尾。 */
 .editor-host .milkdown-link-edit > .link-edit > .input-area {
   width: min(560px, calc(100vw - 360px));
