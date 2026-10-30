@@ -205,6 +205,13 @@ body,
   width: min(560px, calc(100vw - 360px));
 }
 
+/* 条目最小宽度加上竖向滚动条，会多出一条横向滚动条。 */
+.editor-host .milkdown-slash-menu .menu-groups {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #ececec;

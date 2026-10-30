@@ -112,6 +112,33 @@ export function CrepeEditor({
         [Crepe.Feature.ImageBlock]: {
           proxyDomURL: (url) => imageDomSrc(url, filePathRef.current),
         },
+        [Crepe.Feature.BlockEdit]: {
+          textGroup: {
+            label: '文本',
+            text: { label: '正文' },
+            h1: { label: '标题 1' },
+            h2: { label: '标题 2' },
+            h3: { label: '标题 3' },
+            h4: { label: '标题 4' },
+            h5: { label: '标题 5' },
+            h6: { label: '标题 6' },
+            quote: { label: '引用' },
+            divider: { label: '分割线' },
+          },
+          listGroup: {
+            label: '列表',
+            bulletList: { label: '无序列表' },
+            orderedList: { label: '有序列表' },
+            taskList: { label: '待办列表' },
+          },
+          advancedGroup: {
+            label: '高级',
+            image: { label: '图片' },
+            codeBlock: { label: '代码块' },
+            table: { label: '表格' },
+            math: { label: '公式' },
+          },
+        },
       },
     })
 
