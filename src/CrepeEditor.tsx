@@ -5,6 +5,7 @@ import { replaceAll } from '@milkdown/kit/utils'
 import { useEffect, useImperativeHandle, useRef } from 'react'
 import type { Ref } from 'react'
 
+import { codeCompletion } from './codeCompletion'
 import { imageDomSrc } from './localImage'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
@@ -111,6 +112,9 @@ export function CrepeEditor({
         // 只改界面上的图片地址，写回磁盘的仍是 Markdown 里的原路径。
         [Crepe.Feature.ImageBlock]: {
           proxyDomURL: (url) => imageDomSrc(url, filePathRef.current),
+        },
+        [Crepe.Feature.CodeMirror]: {
+          extensions: [codeCompletion],
         },
         [Crepe.Feature.BlockEdit]: {
           textGroup: {

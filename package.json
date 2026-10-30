@@ -19,10 +19,14 @@
     "pack:win": "node scripts/pack.mjs win"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "6.20.3",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/state": "6.7.1",
     "@milkdown/crepe": "^7.22.1",
     "@milkdown/kit": "^7.22.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2",
+    "@typescript/vfs": "^1.6.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
