@@ -200,6 +200,11 @@ body,
   height: auto;
 }
 
+/* 默认输入框只有 200px，长链接只能看到末尾。 */
+.editor-host .milkdown-link-edit > .link-edit > .input-area {
+  width: min(560px, calc(100vw - 360px));
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #ececec;
