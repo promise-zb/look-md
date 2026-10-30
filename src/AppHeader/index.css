@@ -1,0 +1,72 @@
+.chrome {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #f3f3f3;
+}
+
+.doc-name {
+  overflow: hidden;
+  min-width: 0;
+  font-size: 13px;
+  color: #444;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #f7f7f7;
+}
+
+.actions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.actions button:disabled:hover {
+  background: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chrome {
+    border-bottom-color: #333;
+    background: #252525;
+  }
+
+  .doc-name {
+    color: #c8c8c8;
+  }
+
+  .actions button {
+    border-color: #444;
+    background: #2e2e2e;
+    color: #eee;
+  }
+
+  .actions button:hover {
+    background: #3a3a3a;
+  }
+
+  .actions button:disabled:hover {
+    background: #2e2e2e;
+  }
+}

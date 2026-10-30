@@ -1,6 +1,6 @@
 import { convertFileSrc } from '@tauri-apps/api/core'
 
-import { dirOfFile } from './FolderSidebar'
+import { dirOfFile } from './utils'
 
 /** 已经是网页能直接请求的地址，不用再改。 */
 const REMOTE = /^(https?:|data:|blob:|asset:|tauri:)/i

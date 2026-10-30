@@ -5,12 +5,13 @@ import { open, save } from '@tauri-apps/plugin-dialog'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
 
-import { AppHeader, fileName } from './AppHeader'
-import { CrepeEditor } from './CrepeEditor'
-import type { CrepeEditorHandle } from './CrepeEditor'
-import { FolderSidebar, dirOfFile, samePath } from './FolderSidebar'
-import { WELCOME_MARKDOWN } from './welcome'
-import './App.css'
+import { AppHeader } from '../AppHeader'
+import { CrepeEditor } from '../CrepeEditor'
+import type { CrepeEditorHandle } from '../CrepeEditor'
+import { FolderSidebar } from '../FolderSidebar'
+import { dirOfFile, fileName, samePath } from '../utils'
+import { WELCOME_MARKDOWN } from '../welcome'
+import './index.css'
 
 /**
  * 主界面：顶栏、文件夹侧栏、编辑器。

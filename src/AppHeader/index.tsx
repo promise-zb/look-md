@@ -1,9 +1,5 @@
-/** 同时认 `/` 和 `\`，Mac、Windows 都能取出文件名。 */
-export function fileName(path: string | null): string {
-  if (!path) return '未命名'
-  const parts = path.split(/[/\\]/)
-  return parts[parts.length - 1] || path
-}
+import { fileName } from '../utils'
+import './index.css'
 
 type Props = {
   path: string | null

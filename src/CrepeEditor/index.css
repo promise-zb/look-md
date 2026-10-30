@@ -1,0 +1,42 @@
+.editor-host {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.editor-host .milkdown {
+  width: max(100%, 960px);
+  min-height: 100%;
+}
+
+.editor-host .ProseMirror {
+  box-sizing: border-box;
+  width: 960px;
+  min-height: calc(100vh - 88px);
+  margin: 0 auto;
+  /* 左侧留给块操作按钮（加号和拖动手柄，约 66px，再加 16px 间距）。 */
+  padding: 40px 48px 120px 104px;
+  outline: none;
+}
+
+.editor-host .milkdown-block-handle {
+  z-index: 2;
+}
+
+.editor-host .milkdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 默认输入框只有 200px，长链接只能看到末尾。 */
+.editor-host .milkdown-link-edit > .link-edit > .input-area {
+  width: min(560px, calc(100vw - 360px));
+}
+
+/* 条目最小宽度加上竖向滚动条，会多出一条横向滚动条。 */
+.editor-host .milkdown-slash-menu .menu-groups {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}

@@ -5,10 +5,11 @@ import { replaceAll } from '@milkdown/kit/utils'
 import { useEffect, useImperativeHandle, useRef } from 'react'
 import type { Ref } from 'react'
 
-import { codeCompletion } from './codeCompletion'
-import { imageDomSrc } from './localImage'
+import { codeCompletion } from '../codeCompletion'
+import { imageDomSrc } from '../localImage'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
+import './index.css'
 
 /** 父组件通过 ref 读写作文。Milkdown 自己管文档，不适合再套一层受控 state。 */
 export type CrepeEditorHandle = {
