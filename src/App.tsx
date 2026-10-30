@@ -3,6 +3,7 @@ import { listen } from '@tauri-apps/api/event'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { open, save } from '@tauri-apps/plugin-dialog'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react'
 
 import { CrepeEditor } from './CrepeEditor'
 import type { CrepeEditorHandle } from './CrepeEditor'
@@ -21,6 +22,13 @@ import './App.css'
  */
 
 const MD_FILTERS = [{ name: 'Markdown', extensions: ['md', 'markdown', 'txt'] }]
+const SIDEBAR_MIN = 240
+const SIDEBAR_MAX_RATIO = 0.3
+
+function clampSidebarWidth(width: number, total: number) {
+  const max = Math.max(SIDEBAR_MIN, total * SIDEBAR_MAX_RATIO)
+  return Math.min(max, Math.max(SIDEBAR_MIN, width))
+}
 
 /** 同时认 `/` 和 `\`，Mac、Windows 都能取出文件名。 */
 function fileName(path: string | null): string {
@@ -39,6 +47,64 @@ export default function App() {
   const [dirty, setDirty] = useState(false)
   const [workspaceRoot, setWorkspaceRoot] = useState<string | null>(null)
   const [currentDir, setCurrentDir] = useState<string | null>(null)
+  const [dirReload, setDirReload] = useState(0)
+  const workspaceRef = useRef<HTMLDivElement>(null)
+  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_MIN)
+  const [resizing, setResizing] = useState(false)
+
+  useEffect(() => {
+    const workspace = workspaceRef.current
+    if (!workspace) return
+    const clamp = () => {
+      setSidebarWidth((width) => clampSidebarWidth(width, workspace.clientWidth))
+    }
+    clamp()
+    const observer = new ResizeObserver(clamp)
+    observer.observe(workspace)
+    return () => observer.disconnect()
+  }, [])
+
+  const onSplitterPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return
+    const workspace = workspaceRef.current
+    if (!workspace) return
+    event.preventDefault()
+    const handle = event.currentTarget
+    const startX = event.clientX
+    const startWidth = sidebarWidth
+    handle.setPointerCapture(event.pointerId)
+    setResizing(true)
+    const onMove = (ev: PointerEvent) => {
+      setSidebarWidth(clampSidebarWidth(startWidth + ev.clientX - startX, workspace.clientWidth))
+    }
+    const onUp = () => {
+      setResizing(false)
+      handle.removeEventListener('pointermove', onMove)
+      handle.removeEventListener('pointerup', onUp)
+      handle.removeEventListener('pointercancel', onUp)
+    }
+    handle.addEventListener('pointermove', onMove)
+    handle.addEventListener('pointerup', onUp)
+    handle.addEventListener('pointercancel', onUp)
+  }
+
+  const onSplitterKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const total = workspaceRef.current?.clientWidth ?? 0
+    const step = event.shiftKey ? 32 : 16
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      setSidebarWidth((width) => clampSidebarWidth(width - step, total))
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      setSidebarWidth((width) => clampSidebarWidth(width + step, total))
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      setSidebarWidth(SIDEBAR_MIN)
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      setSidebarWidth(clampSidebarWidth(total, total))
+    }
+  }
 
   const syncTitle = useCallback(async (nextPath: string | null, nextDirty: boolean) => {
     const mark = nextDirty ? ' ●' : ''
@@ -119,9 +185,15 @@ export default function App() {
       const folder = dirOfFile(target)
       setCurrentDir((prev) => prev ?? folder)
       setWorkspaceRoot((prev) => prev ?? folder)
+      setDirReload((n) => n + 1)
     },
     [syncTitle],
   )
+
+  const refreshDir = useCallback(() => {
+    if (!currentDir) return
+    setDirReload((n) => n + 1)
+  }, [currentDir])
 
   const doSave = useCallback(async () => {
     const current = pathRef.current
@@ -225,25 +297,49 @@ export default function App() {
           <button type="button" onClick={() => void doOpenFolder()}>
             打开文件夹
           </button>
+          <button
+            type="button"
+            disabled={!currentDir}
+            title={currentDir ? '重新读取当前目录' : '还没有打开文件夹'}
+            onClick={refreshDir}
+          >
+            刷新
+          </button>
           <button type="button" onClick={() => void doSave()}>
             保存
           </button>
         </div>
       </header>
-      <div className="workspace">
-        {workspaceRoot && currentDir ? (
-          <FolderSidebar
-            workspaceRoot={workspaceRoot}
-            currentDir={currentDir}
-            activePath={path}
-            onChangeDir={setCurrentDir}
-            onOpenFile={openFromSidebar}
-          />
-        ) : (
-          <aside className="sidebar sidebar-idle">
-            <p>点「打开文件夹」选择一个目录。进入子文件夹后，用「上一级」返回。</p>
-          </aside>
-        )}
+      <div className={resizing ? 'workspace is-resizing' : 'workspace'} ref={workspaceRef}>
+        <div className="sidebar-pane" style={{ width: sidebarWidth }}>
+          {workspaceRoot && currentDir ? (
+            <FolderSidebar
+              workspaceRoot={workspaceRoot}
+              currentDir={currentDir}
+              activePath={path}
+              reloadKey={dirReload}
+              onChangeDir={setCurrentDir}
+              onOpenFile={openFromSidebar}
+            />
+          ) : (
+            <aside className="sidebar sidebar-idle">
+              <p>点「打开文件夹」选择一个目录。进入子文件夹后，用「上一级」返回。</p>
+            </aside>
+          )}
+        </div>
+        <div
+          className="splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="调整目录宽度"
+          aria-valuemin={SIDEBAR_MIN}
+          aria-valuemax={Math.round(Math.max(SIDEBAR_MIN, (workspaceRef.current?.clientWidth ?? 0) * SIDEBAR_MAX_RATIO))}
+          aria-valuenow={Math.round(sidebarWidth)}
+          tabIndex={0}
+          title="拖动调整目录宽度"
+          onPointerDown={onSplitterPointerDown}
+          onKeyDown={onSplitterKeyDown}
+        />
         <CrepeEditor ref={editorRef} initialMarkdown={WELCOME_MARKDOWN} onChange={markDirty} />
       </div>
     </div>
