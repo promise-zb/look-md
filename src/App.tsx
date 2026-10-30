@@ -68,6 +68,7 @@ export default function App() {
       dirtyRef.current = false
       setPath(filePath)
       setDirty(false)
+      editorRef.current?.setFilePath(filePath)
       editorRef.current?.setMarkdown(text)
       void syncTitle(filePath, false)
       // 已经打开过文件夹时不改工作区，只在还没有侧栏时用文件所在目录当根。
@@ -85,6 +86,7 @@ export default function App() {
     dirtyRef.current = false
     setPath(null)
     setDirty(false)
+    editorRef.current?.setFilePath(null)
     editorRef.current?.setMarkdown(WELCOME_MARKDOWN)
     void syncTitle(null, false)
   }, [confirmDiscard, syncTitle])
@@ -112,6 +114,7 @@ export default function App() {
       dirtyRef.current = false
       setPath(target)
       setDirty(false)
+      editorRef.current?.setFilePath(target)
       void syncTitle(target, false)
       const folder = dirOfFile(target)
       setCurrentDir((prev) => prev ?? folder)

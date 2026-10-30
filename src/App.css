@@ -195,6 +195,11 @@ body,
   outline: none;
 }
 
+.editor-host .milkdown img {
+  max-width: 100%;
+  height: auto;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #ececec;

@@ -5,6 +5,7 @@ import { replaceAll } from '@milkdown/kit/utils'
 import { useEffect, useImperativeHandle, useRef } from 'react'
 import type { Ref } from 'react'
 
+import { imageDomSrc } from './localImage'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 
@@ -12,6 +13,8 @@ import '@milkdown/crepe/theme/frame.css'
 export type CrepeEditorHandle = {
   getMarkdown: () => string
   setMarkdown: (markdown: string) => void
+  /** 当前笔记的路径。相对图片按这个文件所在目录去找，要在 setMarkdown 之前设置。 */
+  setFilePath: (filePath: string | null) => void
 }
 
 type Props = {
@@ -39,6 +42,8 @@ export function CrepeEditor({
   const skipEchoRef = useRef(0)
   const onChangeRef = useRef(onChange)
   const lastRef = useRef(initialMarkdown)
+  // 图片相对路径相对这篇笔记，不相对应用页面。
+  const filePathRef = useRef<string | null>(null)
   onChangeRef.current = onChange
 
   const applyRef = useRef<(markdown: string) => void>(() => {})
@@ -82,6 +87,9 @@ export function CrepeEditor({
       pendingRef.current = null
       applyRef.current(markdown)
     },
+    setFilePath: (filePath: string | null) => {
+      filePathRef.current = filePath
+    },
   }))
 
   useEffect(() => {
@@ -99,6 +107,10 @@ export function CrepeEditor({
         [Crepe.Feature.Placeholder]: {
           text: '开始写作…',
           mode: 'block',
+        },
+        // 只改界面上的图片地址，写回磁盘的仍是 Markdown 里的原路径。
+        [Crepe.Feature.ImageBlock]: {
+          proxyDomURL: (url) => imageDomSrc(url, filePathRef.current),
         },
       },
     })
